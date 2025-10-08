@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Projekt műszaki átadásáig hátralévő idő:</title>
+  <style>
+    html,body{height:100%;margin:0}
+    body{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg,#ffffff,#f1f1f1);
+      color:#000;
+      font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial;
+    }
+    .countdown{
+      text-align:center;
+      padding:32px 40px;
+      border-radius:16px;
+      backdrop-filter:blur(6px);
+      box-shadow:0 10px 30px rgba(0,0,0,0.1);
+      background:rgba(255,255,255,0.8);
+      min-width:360px;
+    }
+    .title{font-size:18px;opacity:0.9;margin-bottom:12px}
+    .time{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      align-items:center;
+    }
+    .unit{
+      background:rgba(0,0,0,0.05);
+      padding:18px 14px;
+      border-radius:10px;
+      min-width:82px;
+    }
+    .num{font-size:34px;line-height:1;font-weight:700;letter-spacing:0.6px}
+    .label{font-size:12px;opacity:0.8;margin-top:6px}
+  </style>
+</head>
+<body>
+  <div class="countdown">
+    <div class="title">Projekt műszaki átadásáig hátralévő idő:</div>
+    <div class="time" aria-live="polite">
+      <div class="unit" id="days">
+        <div class="num">0</div>
+        <div class="label">nap</div>
+      </div>
+      <div class="unit" id="hours">
+        <div class="num">00</div>
+        <div class="label">óra</div>
+      </div>
+      <div class="unit" id="minutes">
+        <div class="num">00</div>
+        <div class="label">perc</div>
+      </div>
+      <div class="unit" id="seconds">
+        <div class="num">00</div>
+        <div class="label">másodperc</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Célidő: 2025.11.30 00:00:00 a helyi időzónában
+    const target = new Date(2025, 10, 30, 0, 0, 0); // hónap: 0 = január, így 10 = november
+
+    const elDays = document.querySelector('#days .num');
+    const elHours = document.querySelector('#hours .num');
+    const elMinutes = document.querySelector('#minutes .num');
+    const elSeconds = document.querySelector('#seconds .num');
+
+    function pad(n){ return String(n).padStart(2,'0'); }
+
+    function update(){
+      const now = new Date();
+      let diff = Math.floor((target - now) / 1000); // különbség másodpercben
+      if (diff < 0) diff = 0;
+
+      const days = Math.floor(diff / 86400);
+      diff -= days * 86400;
+      const hours = Math.floor(diff / 3600);
+      diff -= hours * 3600;
+      const minutes = Math.floor(diff / 60);
+      const seconds = diff - minutes * 60;
+
+      elDays.textContent = String(days);
+      elHours.textContent = pad(hours);
+      elMinutes.textContent = pad(minutes);
+      elSeconds.textContent = pad(seconds);
+    }
+
+    update();
+    const timer = setInterval(() => {
+      update();
+      // leállítható, ha elérte a 0-t
+      const now = new Date();
+      if (now >= target) {
+        clearInterval(timer);
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
